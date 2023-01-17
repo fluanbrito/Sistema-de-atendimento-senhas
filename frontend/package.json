@@ -1,0 +1,20 @@
+{
+  "name": "projeto-sd-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.8",
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  },
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "keywords": [],
+  "author": "Francisco Luan Ferreira Brito, Guilherme de Oliveira Cordeiro",
+  "license": "ISC"
+}

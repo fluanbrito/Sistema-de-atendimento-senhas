@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal de Visualização</title>
+    
+    <link rel="stylesheet" href="tv.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mulish:wght@200;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tv-container">
+        <div class="tv-field">
+            <div class="closed-tickets">
+                <h4>Senhas Recentes</h4>
+                <ul class="ticket-list">
+                    <!-- <li>N 005</li>
+                    <li>N 005</li>
+                    <li>N 005</li>
+                    <li>N 005</li>
+                    <li>N 005</li>
+                    <li>N 005</li> -->
+                    <li>...</li>
+                </ul>
+            </div>
+            <div class="answer">
+                <div class="title">ATENDIMENTO</div>
+
+                <div class="ticket-info-field">
+                    <span>Senha</span>
+                    <h1 class="current-ticket"> </h1>
+                    <span class="ticket-type"></span>
+                </div>
+            </div>
+
+            <div class="open-tickets">
+                <h4>Próximas Senhas</h4>
+                <ul class="ticket-list">
+                    <!-- <li>N 006</li>
+                    <li>N 006</li>
+                    <li>N 006</li>
+                    <li>N 006</li>
+                    <li>N 006</li>
+                    <li>N 006</li> -->
+                    <li>...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+
+        const socket = io('http://localhost:3000');
+
+        const tv_closed_tickets = document.getElementsByClassName('ticket-list')[0]
+        const tv_open_tickets = document.querySelector('.open-tickets ul');
+        const current_ticket = document.querySelector('.current-ticket');
+
+        const ticket_type = document.querySelector('.ticket-type');
+
+        socket.on('srv_tickets_data', (data) => {
+            tv.render({ data });
+            if (data.atual.length) {
+                ticket_type.innerText = data.atual[0].type === 'N' ? 'NORMAL' : 'PRIORITÁRIO';
+            } else {
+                ticket_type.innerText = '';
+            }
+        });
+
+        // socket.on('srv_tickets_data', (data) => {
+            
+        // });
+
+        const tv = {
+            render({ data }) {
+                const serializedClosedTickets = data.closed.reverse().slice(0,4);
+                const serializedOpenTickets = data.open.slice(0,4);
+
+                const hasDotInClosed = data.closed.length >= 5 ? '<li>...</li>' : '';
+                const hasDotInOpen = data.open.length >= 5 ? '<li>...</li>' : '';
+
+                tv_closed_tickets.innerHTML = serializedClosedTickets.map(ticket => (
+                    `<li>${ticket.id}</li>`
+                )).join('') + `${hasDotInClosed}`;
+
+                current_ticket.innerText = data.atual.length ? data.atual[0].id : '';
+
+                tv_open_tickets.innerHTML = serializedOpenTickets.map(ticket => (
+                    `<li>${ticket.id}</li>`
+                )).join('') + `${hasDotInOpen}`;
+            }
+        }
+
+    </script>
+
+</body>
+</html>

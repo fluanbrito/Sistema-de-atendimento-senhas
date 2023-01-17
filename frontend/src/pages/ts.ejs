@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal de Senhas</title>
+</head>
+<link rel="stylesheet" href="ts.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+<body>
+    
+    <header>
+        
+        <div class="choiceView">
+            <div>
+                <ul>
+                    <li>Última senha gerada</li>
+                    <li class="ticket_id"> </li>
+                    <li class="ticket-type"></li>
+                </ul>
+            </div>
+        </div>
+        
+    </header>
+
+    <div class="choicePriority">
+        
+        <button class="buttonNormal" onclick="createTicket('N');">Normal</button>
+        <button class="buttonPriority" onclick="createTicket('P');">Prioritário</button>
+    
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:3000');
+        
+        const ticket = document.querySelector('.ticket_id');
+        const ticket_type = document.querySelector('.ticket-type');
+
+        socket.on('srv_tickets_data', (data) => {
+            ticket.innerText = data.last.id || '';
+            
+            if (data.last) {
+                ticket_type.innerText = data.last.type === 'N' ? 'NORMAL' : 'PRIORITÁRIO';
+            } else {
+                ticket_type.innerText = ''
+            }
+        });
+
+        function createTicket(type) {
+            socket.emit('ts_create_ticket', { type });
+        };
+
+
+    </script>
+</body>
+</html>

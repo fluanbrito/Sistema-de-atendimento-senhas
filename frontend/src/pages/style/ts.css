@@ -1,0 +1,119 @@
+/* #########-----------GENERAL CONFIG--------------########### */
+:root {
+    --primary-color:  hsl(138, 65%, 69%);
+    --secundary-color: hsl(60, 100%, 100%);
+
+    --button-priority: hsl(0, 100%, 50%);
+    --button-normal: hsl(180, 84%, 25%);
+
+    font-size: 62.5%; 
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; 
+}
+
+body {
+    justify-content: center;
+    text-align: center;
+    
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.6rem;
+
+    background-color: var(--primary-color);
+
+    width: 100%;
+    height: 100%;
+}
+
+/* #########-----------CHOICE VIEW--------------########### */
+.choiceView {
+    width: 80vw;
+    height: 65vh;
+
+    margin-inline: auto;
+    margin-top: 3rem;
+    margin-bottom: 4rem;
+
+    font-style: normal;
+    font-weight: 400;
+    font-size: 6rem;
+    line-height: 12.6rem;
+
+    background-color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.choiceView ul {
+    list-style: none;
+}
+
+.choiceView li:nth-child(1) {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 3rem;
+    line-height: 3.8rem;
+}
+
+.choiceView li:nth-child(2) {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10rem;
+    line-height: 12.6rem;
+
+    color: #ff0000;
+}
+
+.choiceView li:nth-child(3) {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 6rem;
+    line-height: 7.5rem;
+
+    text-transform: uppercase;
+}
+
+/* #########-----------CHOICE PRIORITY--------------########### */
+.choicePriority{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2rem;
+}
+
+.choicePriority button {
+    width: 20%;
+    height: 5rem;
+
+    border: none;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 2.5rem;
+    line-height: 3.1rem;
+    text-transform: uppercase;
+    color: var(--secundary-color);
+    cursor: pointer;
+
+    transform: scale(0.9);
+    border-radius: 100rem;
+    transition-duration: 300ms;
+}
+
+.choicePriority button:hover {
+    filter: saturate(2);
+    transform: scale(1);
+}
+
+.buttonPriority {
+    background-color: var(--button-priority);
+}
+
+.buttonNormal {
+    background-color: var(--button-normal);
+}

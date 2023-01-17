@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal de Atendimento</title>
+</head>
+<link rel="stylesheet" href="./ta.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap" rel="stylesheet">
+<body>
+    <header>
+        
+        <div class="choiceView">
+            <div>
+                <p>Atendimento</p>
+                <ul>
+                    <li>senha</li>
+                    <li class="current-ticket"></li>
+                    <li class="ticket-type"></li>
+                </ul>
+            </div>
+        </div>
+        
+    </header>
+
+    <button onclick="finalizarSenha();" class="confirmButton">Finalizar</button>
+    <button onclick="proximaSenha();" class="confirmButton">Próxima Senha</button>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:3000');
+
+        const ticket_type = document.querySelector('.ticket-type');
+        const current_ticket = document.querySelector('.current-ticket');
+
+        socket.on('srv_tickets_data', (data) => {
+            if (data.atual.length) {
+                ticket_type.innerText = data.atual[0].type === 'N' ? 'NORMAL' : 'PRIORITÁRIO';
+                current_ticket.innerText = data.atual[0].id || '';
+            } else {
+                ticket_type.innerText = '';
+                current_ticket.innerText = '';
+            }
+        });
+
+        function proximaSenha() {
+            socket.emit('ta_call_next_ticket');
+        };
+        function finalizarSenha() {
+            socket.emit('ta_process_atual_ticket');
+        };
+
+        socket.on('ta_call_next_ticket_error', (error) => {
+            alert(error);
+        });
+        socket.on('ta_process_atual_ticket_error', (error) => {
+            alert(error);
+        });
+
+    </script>
+</body>
+</html>

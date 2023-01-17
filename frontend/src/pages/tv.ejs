@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>TV</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+
+    <div id="tv-component-container">
+        <div id="tv-component">
+            <!-- <button onclick="gerarN();">Gerar senha (N)</button>
+            <button onclick="gerarP();">Gerar senha (P)</button> -->
+            <button onclick="proximaSenha();">Chamar próxima senha</button>
+            <button onclick="finalizarSenha();">Finalizar atendimento</button>
+
+            <div id="tv-closed-tickets-container">
+                <h3>Senhas recentes</h3>
+                <div id="tv-closed-tickets"></div>
+            </div>
+
+            <div id="tv-atual-ticket-container">
+                <h1>Atendimento</h1>
+                <div id="tv-atual-ticket"></div>
+            </div>
+
+            <div id="tv-open-tickets-container">
+                <h3>Próximas senhas</h3>
+                <div id="tv-open-tickets"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.1/socket.io.js"></script>
+    <script>
+
+        let tv_closed_tickets_div = document.querySelector('#tv-closed-tickets');
+        let tv_atual_ticket = document.querySelector('#tv-atual-ticket');
+        let tv_open_tickets = document.querySelector('#tv-open-tickets');
+
+        const socket = io('http://localhost:3000');
+
+        // function gerarN() {
+        //     socket.emit('ts_create_ticket', { type: 'N' });
+        // };
+        // function gerarP() {
+        //     socket.emit('ts_create_ticket', { type: 'P' });
+        // };
+        function proximaSenha() {
+            socket.emit('ta_call_next_ticket');
+        };
+        function finalizarSenha() {
+            socket.emit('ta_process_atual_ticket');
+        };
+
+        socket.on('srv_tickets_data', (data) => {
+            tv.render({ data });
+        });
+
+        socket.on('ts_create_ticket_error', (error) => {
+            alert(error);
+        });
+        socket.on('ta_call_next_ticket_error', (error) => {
+            alert(error);
+        });
+        socket.on('ta_process_atual_ticket_error', (error) => {
+            alert(error);
+        });
+
+        const tv = {
+            render({ data }) {
+                tv_closed_tickets_div.innerHTML = data.closed.map(ticket => (
+                    `<h2>${ticket.id}</h2>`
+                )).join('');
+
+                tv_atual_ticket.innerHTML = data.atual.map(ticket => (
+                    `<h2>${ticket.id}</h2>`
+                )).join('');
+
+                tv_open_tickets.innerHTML = data.open.map(ticket => (
+                    `<h2>${ticket.id}</h2>`
+                )).join('');
+            },
+
+            createTicket({ type }) {
+                socket.emit('ts_create_ticket', { type });
+            }
+        };
+
+    </script>
+    
+</body>
+</html>
